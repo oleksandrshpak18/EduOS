@@ -6,6 +6,7 @@ import { BaseApp } from '../apps/base-app.js';
 import { taskEngine } from './task-engine.js';
 import { progressManager } from './progress.js';
 import { profileManager } from '../core/profiles.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class TaskCatalogApp extends BaseApp {
   constructor(win, params) {
@@ -124,7 +125,7 @@ export class TaskCatalogApp extends BaseApp {
             windowManager.minimizeWindow(this.win.id);
           });
         } catch (err) {
-          alert(`Помилка відкриття пакета завдань: ${err.message}`);
+          await dialogs.alert(`Помилка відкриття пакета завдань: ${err.message}`, { icon: 'error', title: 'Практичні роботи' });
         }
       });
 

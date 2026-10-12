@@ -5,6 +5,7 @@
 import { BaseApp } from './base-app.js';
 import { vfs } from '../core/filesystem.js';
 import { auditLogger } from '../core/audit-log.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class DiskManagerApp extends BaseApp {
   constructor(win, params) {
@@ -41,13 +42,17 @@ export class DiskManagerApp extends BaseApp {
   bindEvents() {
     this.container.querySelector('#dm-btn-refresh').addEventListener('click', () => this.renderDisks());
     this.container.querySelector('#dm-btn-format-d').addEventListener('click', async () => {
-      if (confirm('УВАГА: Форматування видалить усі файли на диску D:! Ви дійсно бажаєте продовжити?')) {
+      const confirmed = await dialogs.confirm(
+        'УВАГА: Форматування повністю видалить усі файли та папки на диску D:!\nВи дійсно бажаєте продовжити?',
+        { title: 'Форматування диска D:', danger: true, confirmText: 'Форматувати', cancelText: 'Скасувати' }
+      );
+      if (confirmed) {
         try {
           await vfs.formatDisk('D:');
-          alert('Диск D: успішно відформатовано.');
+          await dialogs.alert('Диск D: успішно відформатовано.', { icon: 'success', title: 'Керування дисками' });
           this.renderDisks();
         } catch (e) {
-          alert(e.message);
+          await dialogs.alert(e.message, { icon: 'error', title: 'Помилка форматування' });
         }
       }
     });

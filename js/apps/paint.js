@@ -7,6 +7,7 @@
 import { BaseApp } from './base-app.js';
 import { vfs } from '../core/filesystem.js';
 import { auditLogger } from '../core/audit-log.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class PaintApp extends BaseApp {
   constructor(win, params) {
@@ -515,8 +516,14 @@ export class PaintApp extends BaseApp {
     }
   }
 
-  clearCanvas() {
-    if (confirm('Очистити все полотно?')) {
+  async clearCanvas() {
+    const confirmed = await dialogs.confirm('Очистити все полотно? Поточний малюнок буде стерто.', {
+      title: 'Очищення полотна Paint',
+      danger: true,
+      confirmText: 'Очистити',
+      cancelText: 'Скасувати'
+    });
+    if (confirmed) {
       this.ctx.fillStyle = '#ffffff';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.markDirty();
@@ -585,7 +592,7 @@ export class PaintApp extends BaseApp {
         this.markClean();
         this.showToast(`Малюнок збережено: ${this.fileName}`);
       } catch (err) {
-        alert(`Помилка збереження: ${err.message}`);
+        await dialogs.alert(`Помилка збереження: ${err.message}`, { icon: 'error', title: 'Paint' });
       }
     } else {
       // Відкриваємо модальний діалог "Зберегти як"
@@ -668,7 +675,7 @@ export class PaintApp extends BaseApp {
 
       const targetDir = vfs.resolvePath(folderPath);
       if (!targetDir) {
-        alert(`Помилка: цільову папку ${folderPath} не знайдено.`);
+        await dialogs.alert(`Помилка: цільову папку ${folderPath} не знайдено.`, { icon: 'error' });
         return;
       }
 
@@ -686,7 +693,7 @@ export class PaintApp extends BaseApp {
         closeModal();
         this.showToast(`Малюнок збережено у ${folderPath}\\${finalName}!`);
       } catch (err) {
-        alert(`Помилка збереження: ${err.message}`);
+        await dialogs.alert(`Помилка збереження: ${err.message}`, { icon: 'error', title: 'Paint' });
       }
     });
 
@@ -714,9 +721,15 @@ export class PaintApp extends BaseApp {
   /**
    * Створення нового чистого полотна
    */
-  newCanvas() {
-    if (this.isDirty && !confirm('Незбережені зміни буде втрачено. Створити нове полотно?')) {
-      return;
+  async newCanvas() {
+    if (this.isDirty) {
+      const confirmed = await dialogs.confirm(
+        'Незбережені зміни буде втрачено. Створити нове полотно?',
+        { title: 'Новий малюнок', danger: true, confirmText: 'Створити', cancelText: 'Скасувати' }
+      );
+      if (!confirmed) {
+        return;
+      }
     }
     this.fileId = null;
     this.fileName = 'Малюнок.png';
@@ -740,12 +753,15 @@ export class PaintApp extends BaseApp {
 
     const files = vfs.listChildren(picsDir.id).filter((f) => ['png', 'jpg', 'jpeg'].includes(f.extension));
     if (files.length === 0) {
-      alert('У папці «Зображення» немає файлів малюнків для відкриття.');
+      await dialogs.alert('У папці «Зображення» немає файлів малюнків для відкриття.', { icon: 'info', title: 'Відкриття малюнка' });
       return;
     }
 
     const fileList = files.map((f, i) => `${i + 1}. ${f.name}`).join('\n');
-    const choice = prompt(`Оберіть номер малюнка для відкриття:\n${fileList}`, '1');
+    const choice = await dialogs.prompt(`Оберіть номер малюнка для відкриття:\n${fileList}`, '1', {
+      title: 'Вибір малюнка'
+    });
+    if (!choice) return;
     const idx = parseInt(choice, 10) - 1;
 
     if (files[idx]) {

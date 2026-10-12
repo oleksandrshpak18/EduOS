@@ -12,6 +12,8 @@ import { taskbar } from '../desktop/taskbar.js';
 import { startMenu } from '../desktop/start-menu.js';
 import { contextMenu } from '../desktop/context-menu.js';
 import { taskEngine } from '../learning/task-engine.js';
+import { inputLanguage } from './input-language.js';
+import { dialogs } from './dialogs.js';
 
 // Імпорт додатків
 import { ExplorerApp } from '../apps/explorer.js';
@@ -53,6 +55,7 @@ class EduOSBootstrap {
     windowManager.init(document.getElementById('windows-container'));
     contextMenu.init();
     taskEngine.init();
+    inputLanguage.init();
 
     // 4. Підписка на системні події
     this.setupSystemEvents();
@@ -204,6 +207,7 @@ class EduOSBootstrap {
       desktop.init();
       taskbar.init();
       startMenu.init();
+      inputLanguage.init();
     });
 
     eventBus.on('profile:logout', () => {
@@ -345,7 +349,7 @@ class EduOSBootstrap {
       try {
         await profileManager.login(lName, fName, gClass);
       } catch (err) {
-        alert(err.message);
+        await dialogs.alert(err.message, { icon: 'error', title: 'Помилка входу' });
       }
     };
   }

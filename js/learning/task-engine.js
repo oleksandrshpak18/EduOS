@@ -9,6 +9,7 @@ import { CertificateGenerator } from './certificate.js';
 import { progressManager } from './progress.js';
 import { profileManager } from '../core/profiles.js';
 import { vfs } from '../core/filesystem.js';
+import { dialogs } from '../core/dialogs.js';
 
 class TaskEngine {
   constructor() {
@@ -84,8 +85,12 @@ class TaskEngine {
       this.widgetEl.classList.toggle('collapsed', this.isCollapsed);
     });
 
-    btnClose.addEventListener('click', () => {
-      if (confirm('Ви дійсно бажаєте завершити проходження цієї практичної роботи?')) {
+    btnClose.addEventListener('click', async () => {
+      const confirmed = await dialogs.confirm(
+        'Ви дійсно бажаєте завершити проходження цієї практичної роботи?',
+        { title: 'Завершення роботи', confirmText: 'Завершити', cancelText: 'Продовжити', danger: true }
+      );
+      if (confirmed) {
         this.stopTask();
       }
     });

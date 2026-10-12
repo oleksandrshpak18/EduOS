@@ -5,6 +5,7 @@
  */
 import { BaseApp } from '../apps/base-app.js';
 import { taskEngine } from '../learning/task-engine.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class PackageEditorApp extends BaseApp {
   constructor(win, params) {
@@ -231,9 +232,12 @@ export class PackageEditorApp extends BaseApp {
     });
   }
 
-  testPackage() {
+  async testPackage() {
     if (this.packageData.tasks.length === 0) {
-      alert('Будь ласка, додайте хоча б одне завдання для тестування.');
+      await dialogs.alert('Будь ласка, додайте хоча б одне завдання для тестування.', {
+        icon: 'warning',
+        title: 'Конструктор завдань'
+      });
       return;
     }
     taskEngine.startPackage(this.packageData);
@@ -257,14 +261,20 @@ export class PackageEditorApp extends BaseApp {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       try {
         const parsed = JSON.parse(evt.target.result);
         this.packageData = parsed;
         this.renderLayout();
-        alert(`Пакет «${this.packageData.title}» успішно імпортовано!`);
+        await dialogs.alert(`Пакет «${this.packageData.title}» успішно імпортовано!`, {
+          icon: 'success',
+          title: 'Конструктор завдань'
+        });
       } catch (err) {
-        alert('Помилка імпорту: некоректний JSON-файл.');
+        await dialogs.alert('Помилка імпорту: некоректний JSON-файл пакета.', {
+          icon: 'error',
+          title: 'Помилка імпорту'
+        });
       }
     };
     reader.readAsText(file);

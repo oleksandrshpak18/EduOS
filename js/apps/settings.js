@@ -7,6 +7,7 @@ import { BaseApp } from './base-app.js';
 import { profileManager } from '../core/profiles.js';
 import { vfs } from '../core/filesystem.js';
 import { auditLogger } from '../core/audit-log.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class SettingsApp extends BaseApp {
   constructor(win, params) {
@@ -169,11 +170,15 @@ export class SettingsApp extends BaseApp {
     `;
 
     container.querySelector('#set-btn-reset-vfs').addEventListener('click', async () => {
-      if (confirm('УВАГА: Це видалить усі створені вами файли та відновить початкову структуру папок. Продовжити?')) {
+      const confirmed = await dialogs.confirm(
+        'УВАГА: Це скине файлову систему, очистить диск D: та відновить початкову структуру папок.\nПродовжити?',
+        { title: 'Скидання файлової системи', danger: true, confirmText: 'Скинути', cancelText: 'Скасувати' }
+      );
+      if (confirmed) {
         const profile = profileManager.currentProfile;
         if (profile) {
           await vfs.formatDisk('D:');
-          alert('Файлову систему оновлено до початкового стану.');
+          await dialogs.alert('Файлову систему оновлено до початкового стану.', { icon: 'success', title: 'Налаштування' });
           this.renderStorage(container);
         }
       }

@@ -5,6 +5,7 @@
  */
 import { BaseApp } from './base-app.js';
 import { vfs } from '../core/filesystem.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class BrowserApp extends BaseApp {
   constructor(win, params) {
@@ -204,9 +205,12 @@ export class BrowserApp extends BaseApp {
         if (dlFolder) {
           try {
             await vfs.createFile(dlFolder.id, name, text);
-            alert(`Файл «${name}» успішно завантажено у папку C:\\Користувачі\\Учень\\Завантаження!`);
+            await dialogs.alert(
+              `Файл «${name}» успішно завантажено у папку:\nC:\\Користувачі\\Учень\\Завантаження`,
+              { icon: 'success', title: 'Завантаження завершено' }
+            );
           } catch (e) {
-            alert(e.message);
+            await dialogs.alert(e.message, { icon: 'error', title: 'Помилка завантаження' });
           }
         }
       });

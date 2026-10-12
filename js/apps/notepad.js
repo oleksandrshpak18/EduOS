@@ -6,6 +6,7 @@
 import { BaseApp } from './base-app.js';
 import { vfs } from '../core/filesystem.js';
 import { eventBus } from '../core/event-bus.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class NotepadApp extends BaseApp {
   constructor(win, params) {
@@ -167,7 +168,7 @@ export class NotepadApp extends BaseApp {
         this.container.querySelector('#np-status-dirty').textContent = 'Збережено';
         this.updateTitle();
       } catch (err) {
-        alert(err.message);
+        await dialogs.alert(`Помилка збереження: ${err.message}`, { icon: 'error', title: 'Блокнот' });
       }
     } else {
       await this.saveFileAs();
@@ -178,24 +179,43 @@ export class NotepadApp extends BaseApp {
     const textarea = this.container.querySelector('#np-textarea');
     const content = textarea.value;
 
-    const defaultDir = vfs.resolvePath('C:\\Користувачі\\Учень\\Документи');
-    const name = prompt('Введіть назву файлу:', this.fileName);
-    if (!name) return;
+    const saveResult = await dialogs.showSaveFileDialog({
+      defaultName: this.fileName,
+      defaultFolder: 'C:\\Користувачі\\Учень\\Документи',
+      title: 'Збереження документа — Блокнот',
+      content
+    });
+
+    if (!saveResult) return;
 
     try {
-      const newNode = await vfs.createFile(defaultDir.id, name, content);
-      this.fileId = newNode.id;
-      this.fileName = newNode.name;
+      const existingNode = vfs.resolvePath(saveResult.fullPath);
+      let node;
+      if (existingNode) {
+        await vfs.writeFile(existingNode.id, content);
+        node = existingNode;
+      } else {
+        node = await vfs.createFile(saveResult.folderId, saveResult.fileName, content);
+      }
+
+      this.fileId = node.id;
+      this.fileName = node.name;
       this.isDirty = false;
       this.container.querySelector('#np-status-dirty').textContent = 'Збережено';
       this.updateTitle();
     } catch (err) {
-      alert(err.message);
+      await dialogs.alert(`Помилка збереження: ${err.message}`, { icon: 'error', title: 'Блокнот' });
     }
   }
 
-  newFile() {
-    if (this.isDirty && !confirm('Незбережені зміни буде втрачено. Продовжити?')) return;
+  async newFile() {
+    if (this.isDirty) {
+      const confirmed = await dialogs.confirm(
+        'Незбережені зміни буде втрачено. Створити новий порожній документ?',
+        { title: 'Новий документ', danger: true, confirmText: 'Створити', cancelText: 'Скасувати' }
+      );
+      if (!confirmed) return;
+    }
     this.fileId = null;
     this.fileName = 'Без_назви.txt';
     this.isDirty = false;
@@ -215,7 +235,7 @@ export class NotepadApp extends BaseApp {
     }
   }
 
-  findText() {
+  async findText() {
     const query = this.container.querySelector('#np-find-input').value;
     if (!query) return;
     const textarea = this.container.querySelector('#np-textarea');
@@ -233,7 +253,7 @@ export class NotepadApp extends BaseApp {
         textarea.focus();
         textarea.setSelectionRange(restartIdx, restartIdx + query.length);
       } else {
-        alert('Текст не знайдено');
+        await dialogs.alert(`Текст «${query}» не знайдено в документі.`, { title: 'Пошук у Блокноті', icon: 'info' });
       }
     }
   }

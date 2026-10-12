@@ -6,6 +6,7 @@
 import { BaseApp } from './base-app.js';
 import { vfs } from '../core/filesystem.js';
 import { eventBus } from '../core/event-bus.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class RecycleBinApp extends BaseApp {
   constructor(win, params) {
@@ -66,7 +67,11 @@ export class RecycleBinApp extends BaseApp {
     const btnDelete = this.container.querySelector('#rb-btn-delete');
 
     btnEmpty.addEventListener('click', async () => {
-      if (confirm('Очистити Кошик? Усі видалені файли буде знищено назавжди.')) {
+      const confirmed = await dialogs.confirm(
+        'Очистити Кошик? Усі видалені файли буде знищено назавжди.',
+        { title: 'Очищення Кошика', danger: true, confirmText: 'Очистити', cancelText: 'Скасувати' }
+      );
+      if (confirmed) {
         await vfs.emptyTrash();
       }
     });
@@ -78,14 +83,18 @@ export class RecycleBinApp extends BaseApp {
           this.selectedId = null;
           this.updateButtons();
         } catch (e) {
-          alert(e.message);
+          await dialogs.alert(e.message, { icon: 'error', title: 'Відновлення файлу' });
         }
       }
     });
 
     btnDelete.addEventListener('click', async () => {
       if (this.selectedId) {
-        if (confirm('Остаточно видалити цей файл?')) {
+        const confirmed = await dialogs.confirm(
+          'Остаточно видалити цей файл з Кошика без можливості відновлення?',
+          { title: 'Остаточне видалення', danger: true, confirmText: 'Видалити назавжди', cancelText: 'Скасувати' }
+        );
+        if (confirmed) {
           await vfs.deleteNode(this.selectedId, true);
           this.selectedId = null;
           this.updateButtons();

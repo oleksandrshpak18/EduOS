@@ -7,6 +7,7 @@ import { vfs } from '../core/filesystem.js';
 import { eventBus } from '../core/event-bus.js';
 import { contextMenu } from './context-menu.js';
 import { profileManager } from '../core/profiles.js';
+import { dialogs } from '../core/dialogs.js';
 
 class DesktopManager {
   constructor() {
@@ -238,12 +239,15 @@ class DesktopManager {
         label: 'Перейменувати',
         shortcut: 'F2',
         action: async () => {
-          const newName = prompt('Введіть нову назву:', node.name);
+          const newName = await dialogs.showRenameDialog({
+            currentName: node.name,
+            isDirectory: node.type === 'directory'
+          });
           if (newName && newName !== node.name) {
             try {
               await vfs.renameNode(node.id, newName);
             } catch (err) {
-              alert(err.message);
+              await dialogs.alert(err.message, { icon: 'error', title: 'Перейменування' });
             }
           }
         }
@@ -252,7 +256,11 @@ class DesktopManager {
         label: 'Видалити',
         shortcut: 'Del',
         action: async () => {
-          if (confirm(`Ви дійсно бажаєте перемістити «${node.name}» у Кошик?`)) {
+          const confirmed = await dialogs.confirm(
+            `Ви дійсно бажаєте перемістити «${node.name}» у Кошик?`,
+            { title: 'Видалення до Кошика', danger: true, confirmText: 'Видалити', cancelText: 'Скасувати' }
+          );
+          if (confirmed) {
             await vfs.deleteNode(node.id, false);
           }
         }
@@ -284,12 +292,12 @@ class DesktopManager {
         {
           label: 'Створити папку',
           action: async () => {
-            const name = prompt('Введіть назву нової папки:', 'Нова папка');
+            const name = await dialogs.showNewFolderDialog({ parentName: 'Робочому столі' });
             if (name && desktopDir) {
               try {
                 await vfs.createDirectory(desktopDir.id, name);
               } catch (err) {
-                alert(err.message);
+                await dialogs.alert(err.message, { icon: 'error', title: 'Створення папки' });
               }
             }
           }
@@ -297,12 +305,14 @@ class DesktopManager {
         {
           label: 'Створити текстовий документ',
           action: async () => {
-            const name = prompt('Введіть назву файлу:', 'Новий документ.txt');
+            const name = await dialogs.prompt('Введіть назву файлу:', 'Новий документ.txt', {
+              title: 'Створення текстового документа'
+            });
             if (name && desktopDir) {
               try {
                 await vfs.createFile(desktopDir.id, name, '');
               } catch (err) {
-                alert(err.message);
+                await dialogs.alert(err.message, { icon: 'error', title: 'Створення файлу' });
               }
             }
           }
@@ -323,7 +333,7 @@ class DesktopManager {
                   await vfs.copyNode(node.id, desktopDir.id);
                 }
               } catch (err) {
-                alert(err.message);
+                await dialogs.alert(err.message, { icon: 'error', title: 'Помилка вставки' });
               }
             }
           }

@@ -5,6 +5,7 @@
  */
 import { BaseApp } from './base-app.js';
 import { vfs } from '../core/filesystem.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class ArchiverApp extends BaseApp {
   constructor(win, params) {
@@ -199,8 +200,12 @@ export class ArchiverApp extends BaseApp {
     statusTotal.textContent = `Загальний обсяг: ${totalOrig} Б`;
   }
 
-  createNewArchive() {
-    const name = prompt('Введіть назву нового архіву (наприклад: Архів.zip):', 'Архів.zip');
+  async createNewArchive() {
+    const name = await dialogs.prompt(
+      'Введіть назву нового архіву (наприклад: Архів.zip):',
+      'Архів.zip',
+      { title: 'Створення нового архіву' }
+    );
     if (!name) return;
 
     this.archiveName = name;
@@ -217,12 +222,15 @@ export class ArchiverApp extends BaseApp {
     const archives = children.filter((c) => ['zip', '7z', 'gz'].includes((c.extension || '').toLowerCase()));
 
     if (archives.length === 0) {
-      alert('У поточному каталозі архівів не знайдено.');
+      await dialogs.alert('У поточному каталозі архівів не знайдено.', { icon: 'info', title: 'Архіватор' });
       return;
     }
 
     const names = archives.map((a, i) => `${i + 1}. ${a.name}`).join('\n');
-    const chosen = prompt(`Оберіть номер архіву для відкриття:\n${names}`, '1');
+    const chosen = await dialogs.prompt(`Оберіть номер архіву для відкриття:\n${names}`, '1', {
+      title: 'Відкриття архіву'
+    });
+    if (!chosen) return;
     const idx = parseInt(chosen, 10) - 1;
     if (archives[idx]) {
       await this.loadArchive(archives[idx].id);
@@ -232,18 +240,21 @@ export class ArchiverApp extends BaseApp {
   async addFileFromVFS() {
     const projectsDir = vfs.resolvePath('D:\\Проєкти') || vfs.resolvePath('D:\\Інформатика');
     if (!projectsDir) {
-      alert('Диск D: недоступний');
+      await dialogs.alert('Диск D: недоступний.', { icon: 'error' });
       return;
     }
 
     const files = vfs.listChildren(projectsDir.id).filter((f) => f.type === 'file');
     if (files.length === 0) {
-      alert('У папці D:\\Проєкти немає файлів для додавання.');
+      await dialogs.alert('У папці D:\\Проєкти немає файлів для додавання.', { icon: 'info' });
       return;
     }
 
     const listStr = files.map((f, i) => `${i + 1}. ${f.name}`).join('\n');
-    const choice = prompt(`Оберіть файл для додавання до архіву:\n${listStr}`, '1');
+    const choice = await dialogs.prompt(`Оберіть файл для додавання до архіву:\n${listStr}`, '1', {
+      title: 'Додавання файлу до архіву'
+    });
+    if (!choice) return;
     const idx = parseInt(choice, 10) - 1;
 
     if (files[idx]) {
@@ -266,11 +277,13 @@ export class ArchiverApp extends BaseApp {
 
   async extractAllToVFS() {
     if (this.entries.length === 0) {
-      alert('Архів порожній.');
+      await dialogs.alert('Архів порожній.', { icon: 'warning', title: 'Розархівування' });
       return;
     }
 
-    const destPath = prompt('Вкажіть шлях для розпакування файлів:', 'D:\\Проєкти\\Розпаковано');
+    const destPath = await dialogs.prompt('Вкажіть шлях для розпакування файлів:', 'D:\\Проєкти\\Розпаковано', {
+      title: 'Видобування файлів'
+    });
     if (!destPath) return;
 
     let targetDir = vfs.resolvePath(destPath);
@@ -283,7 +296,7 @@ export class ArchiverApp extends BaseApp {
       if (parentDir) {
         targetDir = await vfs.createDirectory(parentDir.id, folderName);
       } else {
-        alert('Помилка: цільовий батьківський шлях не знайдено.');
+        await dialogs.alert('Помилка: цільовий батьківський шлях не знайдено.', { icon: 'error' });
         return;
       }
     }
@@ -297,7 +310,10 @@ export class ArchiverApp extends BaseApp {
       }
     }
 
-    alert(`Успішно розпаковано ${this.entries.length} файл(ів) у ${destPath}!`);
+    await dialogs.alert(`Успішно розпаковано ${this.entries.length} файл(ів) у:\n${destPath}`, {
+      icon: 'success',
+      title: 'Розпакування завершено'
+    });
   }
 
   async saveArchiveToVFS(showNotification = true) {
@@ -325,10 +341,13 @@ export class ArchiverApp extends BaseApp {
       node.metadata = { simulatedEntries: this.entries };
       this.archiveFileId = node.id;
       if (showNotification) {
-        alert(`Архів «${this.archiveName}» успішно збережено у ${vfs.getNodePath(targetDir.id)}!`);
+        await dialogs.alert(`Архів «${this.archiveName}» успішно збережено у:\n${vfs.getNodePath(targetDir.id)}`, {
+          icon: 'success',
+          title: 'Збереження архіву'
+        });
       }
     } catch (err) {
-      alert(`Помилка збереження архіву: ${err.message}`);
+      await dialogs.alert(`Помилка збереження архіву: ${err.message}`, { icon: 'error' });
     }
   }
 }

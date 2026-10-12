@@ -7,6 +7,7 @@ import { BaseApp } from './base-app.js';
 import { vfs } from '../core/filesystem.js';
 import { eventBus } from '../core/event-bus.js';
 import { contextMenu } from '../desktop/context-menu.js';
+import { dialogs } from '../core/dialogs.js';
 
 export class ExplorerApp extends BaseApp {
   constructor(win, params) {
@@ -219,7 +220,7 @@ export class ExplorerApp extends BaseApp {
   async navigateTo(path, recordHistory = true) {
     const targetNode = vfs.resolvePath(path);
     if (!targetNode) {
-      alert(`Не вдалося знайти шлях: ${path}`);
+      await dialogs.alert(`Не вдалося знайти шлях: ${path}`, { icon: 'error', title: 'Провідник' });
       return;
     }
 
@@ -510,14 +511,20 @@ export class ExplorerApp extends BaseApp {
             try {
               await vfs.restoreFromTrash(item.id);
             } catch (err) {
-              alert(err.message);
+              await dialogs.alert(err.message, { icon: 'error' });
             }
           }
         },
         {
           label: 'Видалити остаточно',
           action: async () => {
-            if (confirm(`Остаточно видалити «${item.name}»?`)) {
+            const confirmed = await dialogs.confirm(`Остаточно видалити «${item.name}»?`, {
+              title: 'Остаточне видалення',
+              danger: true,
+              confirmText: 'Видалити',
+              cancelText: 'Скасувати'
+            });
+            if (confirmed) {
               await vfs.deleteNode(item.id, true);
             }
           }
@@ -542,12 +549,15 @@ export class ExplorerApp extends BaseApp {
           label: 'Перейменувати',
           shortcut: 'F2',
           action: async () => {
-            const newName = prompt('Введіть нову назву:', item.name);
+            const newName = await dialogs.showRenameDialog({
+              currentName: item.name,
+              isDirectory: item.type === 'directory'
+            });
             if (newName && newName !== item.name) {
               try {
                 await vfs.renameNode(item.id, newName);
               } catch (e) {
-                alert(e.message);
+                await dialogs.alert(e.message, { icon: 'error', title: 'Перейменування' });
               }
             }
           }
@@ -571,12 +581,12 @@ export class ExplorerApp extends BaseApp {
   async createNewFolder() {
     const currentNode = vfs.resolvePath(this.currentPath);
     if (!currentNode) return;
-    const name = prompt('Введіть назву нової папки:', 'Нова папка');
+    const name = await dialogs.showNewFolderDialog({ parentName: currentNode.name });
     if (name) {
       try {
         await vfs.createDirectory(currentNode.id, name);
       } catch (err) {
-        alert(err.message);
+        await dialogs.alert(err.message, { icon: 'error', title: 'Створення папки' });
       }
     }
   }
@@ -584,12 +594,14 @@ export class ExplorerApp extends BaseApp {
   async createNewFile() {
     const currentNode = vfs.resolvePath(this.currentPath);
     if (!currentNode) return;
-    const name = prompt('Введіть назву файлу:', 'Текстовий документ.txt');
+    const name = await dialogs.prompt('Введіть назву файлу:', 'Текстовий документ.txt', {
+      title: 'Створення нового файлу'
+    });
     if (name) {
       try {
         await vfs.createFile(currentNode.id, name, '');
       } catch (err) {
-        alert(err.message);
+        await dialogs.alert(err.message, { icon: 'error', title: 'Створення файлу' });
       }
     }
   }
@@ -626,7 +638,7 @@ export class ExplorerApp extends BaseApp {
         await vfs.copyNode(node.id, currentNode.id);
       }
     } catch (err) {
-      alert(err.message);
+      await dialogs.alert(err.message, { icon: 'error', title: 'Помилка вставки' });
     }
   }
 
@@ -634,12 +646,16 @@ export class ExplorerApp extends BaseApp {
     const ids = specificId ? [specificId] : Array.from(this.selectedNodeIds);
     if (ids.length === 0) return;
 
-    if (confirm(`Ви дійсно бажаєте видалити ${ids.length} елемент(ів) у Кошик?`)) {
+    const confirmed = await dialogs.confirm(
+      `Ви дійсно бажаєте видалити ${ids.length} елемент(ів) у Кошик?`,
+      { title: 'Видалення до Кошика', danger: true, confirmText: 'Видалити', cancelText: 'Скасувати' }
+    );
+    if (confirmed) {
       for (const id of ids) {
         try {
           await vfs.deleteNode(id, false);
         } catch (err) {
-          alert(err.message);
+          await dialogs.alert(err.message, { icon: 'error' });
         }
       }
     }
@@ -658,7 +674,7 @@ export class ExplorerApp extends BaseApp {
         const content = evt.target.result;
         await vfs.createFile(currentNode.id, file.name, content);
       } catch (err) {
-        alert(`Помилка імпорту: ${err.message}`);
+        await dialogs.alert(`Помилка імпорту: ${err.message}`, { icon: 'error', title: 'Імпорт файлу' });
       }
     };
 
@@ -669,15 +685,15 @@ export class ExplorerApp extends BaseApp {
     }
   }
 
-  handleFileExport() {
+  async handleFileExport() {
     if (this.selectedNodeIds.size === 0) {
-      alert('Будь ласка, виділіть файл для експорту.');
+      await dialogs.alert('Будь ласка, виділіть файл для експорту.', { icon: 'warning', title: 'Експорт' });
       return;
     }
     const id = Array.from(this.selectedNodeIds)[0];
     const node = vfs.getNode(id);
     if (!node || node.type !== 'file') {
-      alert('Експортувати можна лише файли.');
+      await dialogs.alert('Експортувати можна лише файли.', { icon: 'warning', title: 'Експорт' });
       return;
     }
 
