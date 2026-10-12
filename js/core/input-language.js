@@ -4,7 +4,7 @@
  * Можливості:
  * - Підтримка перемикання між українською (uk) та англійською (en) розкладками.
  * - Оновлення індикатора в системному треї (УКР / ENG).
- * - Спливаюче меню вибору розкладки при кліку на індикатор у треї.
+ * - Швидка зміна мови кліком по кнопці в панелі завдань з викликом меню Flyout та HUD.
  * - Гарячі клавіші перемикання: Alt+Shift та Ctrl+Shift.
  * - Windows 11-стильний Fluent HUD оверлей при зміні мови.
  * - Інтерактивна трансляція клавіатури (Virtual Keyboard Layout Mapping) для навчальних полів
@@ -17,10 +17,11 @@ class InputLanguageManager {
   constructor() {
     this.currentLang = 'uk'; // 'uk' | 'en'
     this.autoTranslateEnabled = true; // віртуальна трансляція введення
-    this.badgeEl = null;
     this.flyoutEl = null;
     this.hudEl = null;
     this.hudTimeout = null;
+    this.flyoutAutoCloseTimer = null;
+    this._listenersAttached = false;
 
     // Словник розкладки клавіатури QWERTY <-> ЙЦУКЕН
     this.enToUkMap = {
@@ -62,7 +63,6 @@ class InputLanguageManager {
       this.autoTranslateEnabled = savedAuto === 'true';
     }
 
-    this.badgeEl = document.querySelector('.tray-lang-badge');
     this.createHudElement();
     this.createFlyoutElement();
     this.updateBadge();
@@ -73,7 +73,7 @@ class InputLanguageManager {
     return this.currentLang;
   }
 
-  setLanguage(lang, showHud = true) {
+  setLanguage(lang, showNotification = true) {
     if (lang !== 'uk' && lang !== 'en') return;
     this.currentLang = lang;
     localStorage.setItem('eduos_input_language', lang);
@@ -81,16 +81,16 @@ class InputLanguageManager {
     this.updateBadge();
     this.updateFlyout();
 
-    if (showHud) {
+    if (showNotification) {
       this.showHudNotification();
     }
 
     eventBus.emit('language:changed', { lang: this.currentLang });
   }
 
-  toggleLanguage(showHud = true) {
+  toggleLanguage(showNotification = true) {
     const nextLang = this.currentLang === 'uk' ? 'en' : 'uk';
-    this.setLanguage(nextLang, showHud);
+    this.setLanguage(nextLang, showNotification);
   }
 
   setAutoTranslate(enabled) {
@@ -100,26 +100,20 @@ class InputLanguageManager {
   }
 
   updateBadge() {
-    if (!this.badgeEl) {
-      this.badgeEl = document.querySelector('.tray-lang-badge');
-    }
-    if (this.badgeEl) {
-      this.badgeEl.textContent = this.currentLang === 'uk' ? 'УКР' : 'ENG';
-      this.badgeEl.title = this.currentLang === 'uk' 
-        ? 'Мова введення: Українська (Alt+Shift)' 
-        : 'Input Language: English (Alt+Shift)';
-      if (!this.badgeEl._hasClick) {
-        this.badgeEl._hasClick = true;
-        this.badgeEl.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.toggleFlyout();
-        });
-      }
-    }
+    const badges = document.querySelectorAll('.tray-lang-badge');
+    badges.forEach((b) => {
+      b.textContent = this.currentLang === 'uk' ? 'УКР' : 'ENG';
+      b.title = this.currentLang === 'uk' 
+        ? 'Мова введення: Українська (Клік для зміни на ENG, Alt+Shift)' 
+        : 'Input Language: English (Click to switch to УКР, Alt+Shift)';
+    });
   }
 
   createHudElement() {
-    if (document.getElementById('edu-lang-hud')) return;
+    if (document.getElementById('edu-lang-hud')) {
+      this.hudEl = document.getElementById('edu-lang-hud');
+      return;
+    }
 
     this.hudEl = document.createElement('div');
     this.hudEl.id = 'edu-lang-hud';
@@ -149,12 +143,26 @@ class InputLanguageManager {
   }
 
   createFlyoutElement() {
-    if (document.getElementById('edu-lang-flyout')) return;
+    if (document.getElementById('edu-lang-flyout')) {
+      this.flyoutEl = document.getElementById('edu-lang-flyout');
+      this.updateFlyout();
+      return;
+    }
 
     this.flyoutEl = document.createElement('div');
     this.flyoutEl.id = 'edu-lang-flyout';
     this.flyoutEl.className = 'edu-lang-flyout acrylic-panel';
     document.body.appendChild(this.flyoutEl);
+
+    this.flyoutEl.addEventListener('mouseenter', () => {
+      if (this.flyoutAutoCloseTimer) clearTimeout(this.flyoutAutoCloseTimer);
+    });
+    this.flyoutEl.addEventListener('mouseleave', () => {
+      this.flyoutAutoCloseTimer = setTimeout(() => {
+        this.hideFlyout();
+      }, 1800);
+    });
+
     this.updateFlyout();
   }
 
@@ -247,6 +255,10 @@ class InputLanguageManager {
     if (this.flyoutEl) {
       this.flyoutEl.classList.remove('open');
     }
+    if (this.flyoutAutoCloseTimer) {
+      clearTimeout(this.flyoutAutoCloseTimer);
+      this.flyoutAutoCloseTimer = null;
+    }
   }
 
   toggleFlyout() {
@@ -257,24 +269,58 @@ class InputLanguageManager {
     }
   }
 
+  /**
+   * Обробка кліку по кнопці в панелі завдань (треї)
+   */
+  handleBadgeClick(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // 1. Миттєво перемикаємо мову (УКР <-> ENG)
+    this.toggleLanguage(true);
+
+    // 2. Відображаємо випадаюче меню Flyout над кнопкою
+    this.showFlyout();
+
+    // 3. Автоматично приховуємо Flyout через 2.5 сек, якщо користувач просто клікнув і продовжує друк
+    if (this.flyoutAutoCloseTimer) clearTimeout(this.flyoutAutoCloseTimer);
+    this.flyoutAutoCloseTimer = setTimeout(() => {
+      this.hideFlyout();
+    }, 2500);
+  }
+
   setupListeners() {
     if (this._listenersAttached) return;
     this._listenersAttached = true;
 
-    // 1. Клік на бейдж у треї
-    if (this.badgeEl) {
-      this.badgeEl.addEventListener('click', (e) => {
+    // 1. Глобальне делегування кліків для кнопки мови в треї
+    document.addEventListener('click', (e) => {
+      const badge = e.target.closest('.tray-lang-badge');
+      if (badge) {
+        this.handleBadgeClick(e);
+        return;
+      }
+
+      // Якщо клік всередині самого меню вибору мови - залишаємо меню відкритим для взаємодії
+      if (this.flyoutEl && this.flyoutEl.contains(e.target)) {
+        return;
+      }
+
+      // Клік за межами меню та кнопки - закриваємо меню
+      if (this.flyoutEl && this.flyoutEl.classList.contains('open')) {
+        this.hideFlyout();
+      }
+    });
+
+    // Правий клік по кнопці мови відкриває меню без зміни поточної мови
+    document.addEventListener('contextmenu', (e) => {
+      const badge = e.target.closest('.tray-lang-badge');
+      if (badge) {
+        e.preventDefault();
         e.stopPropagation();
         this.toggleFlyout();
-      });
-    }
-
-    // Закриття меню при кліку в будь-яке інше місце
-    document.addEventListener('click', (e) => {
-      if (this.flyoutEl && this.flyoutEl.classList.contains('open')) {
-        if (!this.flyoutEl.contains(e.target) && e.target !== this.badgeEl) {
-          this.hideFlyout();
-        }
       }
     });
 
@@ -284,7 +330,6 @@ class InputLanguageManager {
       const isCtrlShift = (e.ctrlKey && e.shiftKey && !e.altKey && !e.metaKey);
 
       if (isAltShift || isCtrlShift) {
-        // Запобігаємо стандартній дії браузера при зміні розкладки
         e.preventDefault();
         this.toggleLanguage(true);
       }
@@ -303,7 +348,6 @@ class InputLanguageManager {
       );
 
       if (!isEditable) return;
-      // Якщо це поле для пароля чи іншого специфічного типу, пропускаємо
       if (target.type === 'password' || target.type === 'number' || target.type === 'date') return;
 
       const translated = this.translateText(e.data);

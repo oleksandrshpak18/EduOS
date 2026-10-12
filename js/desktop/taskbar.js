@@ -4,6 +4,7 @@
  */
 import { windowManager } from '../core/window-manager.js';
 import { eventBus } from '../core/event-bus.js';
+import { inputLanguage } from '../core/input-language.js';
 
 class TaskbarManager {
   constructor() {
@@ -22,6 +23,7 @@ class TaskbarManager {
 
     this.setupClock();
     this.setupListeners();
+    inputLanguage.updateBadge();
   }
 
   setupClock() {
