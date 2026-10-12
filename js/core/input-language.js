@@ -83,6 +83,8 @@ class InputLanguageManager {
 
     if (showNotification) {
       this.showHudNotification();
+    } else {
+      this.hideHudNotification();
     }
 
     eventBus.emit('language:changed', { lang: this.currentLang });
@@ -104,8 +106,8 @@ class InputLanguageManager {
     badges.forEach((b) => {
       b.textContent = this.currentLang === 'uk' ? 'УКР' : 'ENG';
       b.title = this.currentLang === 'uk' 
-        ? 'Мова введення: Українська (Клік для зміни на ENG, Alt+Shift)' 
-        : 'Input Language: English (Click to switch to УКР, Alt+Shift)';
+        ? 'Мова введення: Українська (Клік для зміни, гарячі клавіші: Ctrl+Shift)' 
+        : 'Input Language: English (Click to switch, hotkey: Ctrl+Shift)';
     });
   }
 
@@ -160,7 +162,7 @@ class InputLanguageManager {
     this.flyoutEl.addEventListener('mouseleave', () => {
       this.flyoutAutoCloseTimer = setTimeout(() => {
         this.hideFlyout();
-      }, 1800);
+      }, 1000);
     });
 
     this.updateFlyout();
@@ -171,33 +173,37 @@ class InputLanguageManager {
 
     const isUk = this.currentLang === 'uk';
     this.flyoutEl.innerHTML = `
-      <div class="lang-flyout-header">
-        <span class="lang-flyout-title">🌐 Мови введення</span>
-        <span class="lang-flyout-shortcut">Alt + Shift</span>
-      </div>
-      <div class="lang-flyout-list">
-        <div class="lang-flyout-item ${isUk ? 'active' : ''}" data-lang="uk">
-          <div class="lang-flyout-check">${isUk ? '✓' : ''}</div>
-          <div class="lang-flyout-badge">УКР</div>
-          <div class="lang-flyout-info">
-            <div class="lang-flyout-label">Українська</div>
-            <div class="lang-flyout-sub">Українська розкладка</div>
+      <div class="lang-flyout-card">
+        <div class="lang-flyout-header">
+          <div class="lang-flyout-title-row">
+            <span class="lang-flyout-title">Мова введення EduOS</span>
+            <span class="lang-flyout-shortcut-badge" title="Гаряча комбінація: тільки Ctrl+Shift">Ctrl + Shift</span>
           </div>
         </div>
-        <div class="lang-flyout-item ${!isUk ? 'active' : ''}" data-lang="en">
-          <div class="lang-flyout-check">${!isUk ? '✓' : ''}</div>
-          <div class="lang-flyout-badge">ENG</div>
-          <div class="lang-flyout-info">
-            <div class="lang-flyout-label">English</div>
-            <div class="lang-flyout-sub">United States (QWERTY)</div>
+        <div class="lang-flyout-options">
+          <div class="lang-flyout-item ${isUk ? 'active' : ''}" data-lang="uk" role="button" tabindex="0">
+            <span class="lang-flyout-code">УКР</span>
+            <div class="lang-flyout-meta">
+              <span class="lang-flyout-name">Українська</span>
+              <span class="lang-flyout-desc">Розкладка клавіатури</span>
+            </div>
+            <span class="lang-flyout-check">${isUk ? '✓' : ''}</span>
+          </div>
+          <div class="lang-flyout-item ${!isUk ? 'active' : ''}" data-lang="en" role="button" tabindex="0">
+            <span class="lang-flyout-code">ENG</span>
+            <div class="lang-flyout-meta">
+              <span class="lang-flyout-name">English</span>
+              <span class="lang-flyout-desc">United States layout</span>
+            </div>
+            <span class="lang-flyout-check">${!isUk ? '✓' : ''}</span>
           </div>
         </div>
-      </div>
-      <div class="lang-flyout-footer">
-        <label class="lang-flyout-toggle-label">
-          <input type="checkbox" id="lang-flyout-autotranslate" ${this.autoTranslateEnabled ? 'checked' : ''} />
-          <span>Віртуальна розкладка</span>
-        </label>
+        <div class="lang-flyout-footer">
+          <label class="lang-flyout-toggle-label">
+            <input type="checkbox" id="lang-flyout-autotranslate" ${this.autoTranslateEnabled ? 'checked' : ''} />
+            <span>Віртуальна трансляція клавіатури</span>
+          </label>
+        </div>
       </div>
     `;
 
@@ -206,8 +212,11 @@ class InputLanguageManager {
       item.addEventListener('click', (e) => {
         e.stopPropagation();
         const lang = item.dataset.lang;
-        this.setLanguage(lang, true);
-        this.hideFlyout();
+        this.setLanguage(lang, false); // false = НЕ показувати центральне вікно HUD
+        if (this.flyoutAutoCloseTimer) clearTimeout(this.flyoutAutoCloseTimer);
+        this.flyoutAutoCloseTimer = setTimeout(() => {
+          this.hideFlyout();
+        }, 600);
       });
     });
 
@@ -240,14 +249,40 @@ class InputLanguageManager {
       clearTimeout(this.hudTimeout);
     }
 
+    // Зменшено у 2 рази (було 1400 мс -> стало 700 мс)
     this.hudTimeout = setTimeout(() => {
       this.hudEl.classList.remove('visible');
-    }, 1400);
+    }, 700);
+  }
+
+  hideHudNotification() {
+    if (this.hudEl) {
+      this.hudEl.classList.remove('visible');
+    }
+    if (this.hudTimeout) {
+      clearTimeout(this.hudTimeout);
+      this.hudTimeout = null;
+    }
   }
 
   showFlyout() {
     if (!this.flyoutEl) return;
     this.updateFlyout();
+
+    // Динамічне вирівнювання точно над кнопкою мови в системному треї
+    const badge = document.querySelector('.tray-lang-badge');
+    if (badge) {
+      const rect = badge.getBoundingClientRect();
+      const flyoutWidth = 310;
+      let right = window.innerWidth - rect.right - 8;
+      if (right < 8) right = 8;
+      if (right + flyoutWidth > window.innerWidth) {
+        right = window.innerWidth - flyoutWidth - 8;
+      }
+      this.flyoutEl.style.right = `${right}px`;
+      this.flyoutEl.style.bottom = `${(window.innerHeight - rect.top) + 8}px`;
+    }
+
     this.flyoutEl.classList.add('open');
   }
 
@@ -278,17 +313,20 @@ class InputLanguageManager {
       e.stopPropagation();
     }
 
-    // 1. Миттєво перемикаємо мову (УКР <-> ENG)
-    this.toggleLanguage(true);
+    // 1. Приховуємо центральне вікно HUD, якщо воно було відкрите
+    this.hideHudNotification();
 
-    // 2. Відображаємо випадаюче меню Flyout над кнопкою
+    // 2. Миттєво перемикаємо мову (УКР <-> ENG) БЕЗ показу центрального вікна HUD
+    this.toggleLanguage(false);
+
+    // 3. Відображаємо випадаюче вікно Flyout виключно біля кнопки на панелі задач
     this.showFlyout();
 
-    // 3. Автоматично приховуємо Flyout через 2.5 сек, якщо користувач просто клікнув і продовжує друк
+    // 4. Автоматично приховуємо Flyout (зменшено у 2 рази: було 3500 мс -> стало 1750 мс)
     if (this.flyoutAutoCloseTimer) clearTimeout(this.flyoutAutoCloseTimer);
     this.flyoutAutoCloseTimer = setTimeout(() => {
       this.hideFlyout();
-    }, 2500);
+    }, 1750);
   }
 
   setupListeners() {
@@ -314,23 +352,27 @@ class InputLanguageManager {
       }
     });
 
-    // Правий клік по кнопці мови відкриває меню без зміни поточної мови
+    // Правий клік по кнопці мови відкриває меню біля кнопки без обов'язкової зміни поточної мови
     document.addEventListener('contextmenu', (e) => {
       const badge = e.target.closest('.tray-lang-badge');
       if (badge) {
         e.preventDefault();
         e.stopPropagation();
+        this.hideHudNotification();
         this.toggleFlyout();
       }
     });
 
-    // 2. Гарячі клавіші перемикання (Alt+Shift або Ctrl+Shift)
+    // 2. Гарячі клавіші перемикання (ТІЛЬКИ Ctrl+Shift; комбінація Alt+Shift вимкнена)
     window.addEventListener('keydown', (e) => {
-      const isAltShift = (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey);
+      // Тільки Ctrl + Shift (без Alt і без Meta/Win)
       const isCtrlShift = (e.ctrlKey && e.shiftKey && !e.altKey && !e.metaKey);
 
-      if (isAltShift || isCtrlShift) {
+      if (isCtrlShift) {
         e.preventDefault();
+        // Приховуємо вікно біля панелі задач
+        this.hideFlyout();
+        // Показуємо виключно центральне вікно оверлею HUD
         this.toggleLanguage(true);
       }
     }, true);

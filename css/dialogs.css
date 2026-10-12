@@ -595,18 +595,20 @@
    -------------------------------------------------------------------------- */
 .edu-lang-flyout {
   position: fixed;
-  bottom: 56px;
+  bottom: 54px;
   right: 12px;
-  width: 290px;
+  width: 310px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-highlight);
   background: var(--bg-acrylic-solid);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
   z-index: 55000;
-  padding: 12px;
+  padding: 14px;
   display: none;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   animation: flyoutSlideUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -614,88 +616,120 @@
   display: flex;
 }
 
-.lang-flyout-header {
+.lang-flyout-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lang-flyout-header {
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
+.lang-flyout-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .lang-flyout-title {
-  font-size: 12.5px;
+  font-size: 11.5px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
-.lang-flyout-shortcut {
+.lang-flyout-shortcut-badge {
   font-size: 11px;
+  font-weight: 700;
   color: var(--accent-primary);
-  background: var(--bg-surface-active);
-  padding: 2px 6px;
+  background: rgba(2, 132, 199, 0.16);
+  border: 1px solid rgba(2, 132, 199, 0.35);
+  padding: 3px 8px;
   border-radius: var(--radius-sm);
-  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.lang-flyout-list {
+.lang-flyout-options {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .lang-flyout-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 12px;
+  padding: 10px 14px;
   border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   cursor: pointer;
   transition: all var(--transition-fast);
-  border: 1px solid transparent;
+  user-select: none;
 }
 
 .lang-flyout-item:hover {
   background: var(--bg-surface-hover);
-  border-color: var(--border-subtle);
+  border-color: var(--border-focus);
 }
 
 .lang-flyout-item.active {
-  background: var(--bg-surface-active);
-  border-left: 3px solid var(--accent-primary);
+  background: var(--accent-primary);
+  border-color: var(--border-focus);
+  box-shadow: 0 4px 16px var(--accent-glow);
+  transform: scale(1.02);
 }
 
-.lang-flyout-check {
-  width: 14px;
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--accent-primary);
-  text-align: center;
-}
-
-.lang-flyout-badge {
-  font-size: 11.5px;
-  font-weight: 700;
-  background: rgba(2, 132, 199, 0.15);
-  color: var(--accent-primary);
-  padding: 3px 6px;
-  border-radius: var(--radius-sm);
+.lang-flyout-code {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
   letter-spacing: 0.5px;
+  min-width: 40px;
 }
 
-.lang-flyout-info {
+.lang-flyout-item.active .lang-flyout-code {
+  color: #ffffff;
+}
+
+.lang-flyout-meta {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
-.lang-flyout-label {
-  font-size: 13px;
-  font-weight: 500;
+.lang-flyout-name {
+  font-size: 13.5px;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
-.lang-flyout-sub {
+.lang-flyout-item.active .lang-flyout-name {
+  color: #ffffff;
+}
+
+.lang-flyout-desc {
   font-size: 11px;
   color: var(--text-secondary);
+}
+
+.lang-flyout-item.active .lang-flyout-desc {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.lang-flyout-check {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--accent-primary);
+  min-width: 14px;
+  text-align: right;
+}
+
+.lang-flyout-item.active .lang-flyout-check {
+  color: #ffffff;
 }
 
 .lang-flyout-footer {
