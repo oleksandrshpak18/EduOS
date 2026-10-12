@@ -1,0 +1,183 @@
+/* ==========================================================================
+   EduOS - Taskbar & System Tray (Fluent Design)
+   ========================================================================== */
+
+#taskbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 48px;
+  background: var(--bg-taskbar);
+  backdrop-filter: var(--blur-acrylic);
+  -webkit-backdrop-filter: var(--blur-acrylic);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 10000;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Ліва секція або центральна (Пуск + Програми) */
+.taskbar-center-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+}
+
+/* Кнопка Пуск */
+.taskbar-start-btn {
+  width: 40px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-primary);
+}
+
+.taskbar-start-btn:hover {
+  background: var(--bg-surface-hover);
+  transform: scale(1.06);
+}
+
+.taskbar-start-btn:active,
+.taskbar-start-btn.active {
+  transform: scale(0.96);
+  background: var(--bg-surface-active);
+  box-shadow: inset 0 -2px 0 var(--accent-primary);
+}
+
+.start-icon-svg {
+  filter: drop-shadow(0 2px 5px rgba(2, 132, 199, 0.5));
+}
+
+/* Список запущених програм */
+.taskbar-apps-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+}
+
+.taskbar-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-primary);
+  max-width: 170px;
+  overflow: hidden;
+}
+
+.taskbar-item:hover {
+  background: var(--bg-surface-hover);
+}
+
+.taskbar-item.active {
+  background: var(--bg-surface-active);
+}
+
+.taskbar-item-title {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.taskbar-active-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 3px;
+  background: var(--accent-primary);
+  border-radius: 3px 3px 0 0;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.taskbar-item.active .taskbar-active-indicator {
+  width: 24px;
+  opacity: 1;
+  box-shadow: 0 0 8px var(--border-focus);
+}
+
+.taskbar-item.minimized .taskbar-active-indicator {
+  width: 10px;
+  opacity: 0.6;
+}
+
+/* Системний трей */
+.taskbar-tray {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+}
+
+.tray-icon-item {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+
+.tray-icon-item:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.tray-lang-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.taskbar-clock {
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  text-align: right;
+  transition: background var(--transition-fast);
+}
+
+.taskbar-clock:hover {
+  background: var(--bg-surface-hover);
+}
+
+.clock-time {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.clock-date {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.1;
+  margin-top: 2px;
+}

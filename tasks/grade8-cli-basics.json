@@ -1,0 +1,97 @@
+{
+  "id": "grade8-cli-basics",
+  "title": "Командний інтерфейс операційних систем (CLI)",
+  "topic": "Командний рядок Windows (CMD) та Linux (Bash)",
+  "grade": "8",
+  "difficulty": "advanced",
+  "mode": "learning",
+  "maxScore": 12,
+  "description": "Практична робота для 8 класу: робота з командним рядком, використання команд навігації cd, створення каталогів mkdir, копіювання, перегляду вмісту та видалення файлів.",
+  "initialState": {
+    "clearDiskD": false,
+    "nodes": [
+      {
+        "path": "D:\\Інформатика\\readme.txt",
+        "content": "Навчальний файл для перевірки командного рядка."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "g8-task-1",
+      "order": 1,
+      "title": "Створення папки через термінал",
+      "instruction": "Відкрийте «Командний рядок Windows» (CMD) або «Термінал Linux» (Bash) та створіть папку D:\\Інформатика\\CLI_Практика за допомогою команди mkdir.",
+      "points": 2,
+      "hint": "У терміналі виконайте: cd \"D:\\Інформатика\" і потім: mkdir CLI_Практика (або mkdir \"D:\\Інформатика\\CLI_Практика\").",
+      "hintPenalty": 0.5,
+      "validator": {
+        "type": "directory_exists",
+        "params": {
+          "path": "D:\\Інформатика\\CLI_Практика"
+        }
+      }
+    },
+    {
+      "id": "g8-task-2",
+      "order": 2,
+      "title": "Копіювання файлу командою copy / cp",
+      "instruction": "За допомогою команди copy (у CMD) або cp (у Bash) скопіюйте файл readme.txt з D:\\Інформатика у папку D:\\Інформатика\\CLI_Практика.",
+      "points": 3,
+      "hint": "У CMD виконайте: copy \"D:\\Інформатика\\readme.txt\" \"D:\\Інформатика\\CLI_Практика\" або у Bash: cp D:/Інформатика/readme.txt D:/Інформатика/CLI_Практика/",
+      "hintPenalty": 0.5,
+      "validator": {
+        "type": "file_exists",
+        "params": {
+          "path": "D:\\Інформатика\\CLI_Практика\\readme.txt"
+        }
+      }
+    },
+    {
+      "id": "g8-task-3",
+      "order": 3,
+      "title": "Перейменування через ren або mv",
+      "instruction": "Перейменуйте скопійований файл readme.txt у папці D:\\Інформатика\\CLI_Практика на info.txt за допомогою команди ren (у CMD) або mv (у Bash).",
+      "points": 2,
+      "hint": "У CMD: cd \"D:\\Інформатика\\CLI_Практика\" && ren readme.txt info.txt. У Bash: mv D:/Інформатика/CLI_Практика/readme.txt D:/Інформатика/CLI_Практика/info.txt",
+      "hintPenalty": 0.5,
+      "validator": {
+        "type": "file_exists",
+        "params": {
+          "path": "D:\\Інформатика\\CLI_Практика\\info.txt"
+        }
+      }
+    },
+    {
+      "id": "g8-task-4",
+      "order": 4,
+      "title": "Перегляд вмісту файлу через type або cat",
+      "instruction": "Виконайте у терміналі команду для виведення тексту файлу info.txt на екран (команда type у CMD або cat у Bash).",
+      "points": 2,
+      "hint": "Виконайте команду: type \"D:\\Інформатика\\CLI_Практика\\info.txt\" у CMD або cat \"D:/Інформатика/CLI_Практика/info.txt\" у Bash.",
+      "hintPenalty": 0.5,
+      "validator": {
+        "type": "command_executed",
+        "params": {
+          "command": ["type", "cat"],
+          "target": "info.txt"
+        }
+      }
+    },
+    {
+      "id": "g8-task-5",
+      "order": 5,
+      "title": "Створення вкладеної папки та виведення tree",
+      "instruction": "Усередині D:\\Інформатика\\CLI_Практика створіть підпапку Data і виконайте команду tree для відображення структури каталогу.",
+      "points": 3,
+      "hint": "Виконайте: mkdir \"D:\\Інформатика\\CLI_Практика\\Data\" та потім команду tree.",
+      "hintPenalty": 0.5,
+      "validator": {
+        "type": "directory_exists",
+        "params": {
+          "path": "D:\\Інформатика\\CLI_Практика\\Data"
+        }
+      }
+    }
+  ]
+}

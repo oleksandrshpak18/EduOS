@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="binGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <filter id="binShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Bin Lid -->
+  <rect x="18" y="5" width="12" height="4" rx="2" fill="url(#binGrad)"/>
+  <rect x="8" y="9" width="32" height="5" rx="2.5" fill="url(#binGrad)" filter="url(#binShadow)"/>
+
+  <!-- Bin Container Body -->
+  <path d="M12 15l2.5 25c.2 2 1.9 3.5 3.9 3.5h19.2c2 0 3.7-1.5 3.9-3.5L44 15H12z" fill="url(#bodyGrad)" filter="url(#binShadow)"/>
+
+  <!-- Rib Lines / Vertical Grooves -->
+  <line x1="20" y1="20" x2="21" y2="38" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="28" y1="20" x2="28" y2="38" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="36" y1="20" x2="35" y2="38" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Recycling Arrows Emblem -->
+  <g transform="translate(19, 23) scale(0.45)">
+    <path d="M11 2L8 5h6v4h4V5h6l-3-3H11z" fill="#0284c7"/>
+    <path d="M3 13l3 3v-6H2v-4h4v-6L3 3v10z" fill="#0284c7"/>
+    <path d="M19 13l-3 3v-6h4v-4h-4v-6l3 3v10z" fill="#0284c7"/>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="photoSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="sunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="photoShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Photo Outer Frame -->
+  <rect x="5" y="7" width="38" height="34" rx="5" fill="#f8fafc" filter="url(#photoShadow)"/>
+
+  <!-- Photo Inner Canvas -->
+  <rect x="7" y="9" width="34" height="30" rx="3" fill="url(#photoSky)"/>
+
+  <!-- Golden Sun -->
+  <circle cx="16" cy="18" r="4.5" fill="url(#sunGrad)"/>
+
+  <!-- Mountain Peaks -->
+  <!-- Back Mountain (Darker Emerald) -->
+  <path d="M22 39l8-10 11 10z" fill="#059669"/>
+  <!-- Front Mountain (Vibrant Teal) -->
+  <path d="M7 39l12-14 9 14z" fill="#10b981"/>
+  <!-- Snow Peaks -->
+  <path d="M19 25l-2.5 3 2.5 1 2.5-1z" fill="#f0fdf4"/>
+</svg>

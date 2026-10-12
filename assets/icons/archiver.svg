@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="book1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="book2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <linearGradient id="book3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <linearGradient id="zipperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#eab308"/>
+    </linearGradient>
+    <filter id="arcShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Stacked Volumes / Archives -->
+  <rect x="8" y="7" width="32" height="10" rx="2" fill="url(#book1)" filter="url(#arcShadow)"/>
+  <rect x="8" y="19" width="32" height="10" rx="2" fill="url(#book2)" filter="url(#arcShadow)"/>
+  <rect x="8" y="31" width="32" height="10" rx="2" fill="url(#book3)" filter="url(#arcShadow)"/>
+
+  <!-- Book Pages Edge -->
+  <rect x="36" y="9" width="3" height="6" fill="#f8fafc"/>
+  <rect x="36" y="21" width="3" height="6" fill="#f8fafc"/>
+  <rect x="36" y="33" width="3" height="6" fill="#f8fafc"/>
+
+  <!-- Compression Belt (Vertical) -->
+  <rect x="20" y="4" width="8" height="40" rx="2" fill="#1e293b" opacity="0.85"/>
+
+  <!-- Zipper Teeth -->
+  <rect x="22" y="7" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="11" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="15" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="19" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="23" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="27" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="31" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="35" width="4" height="2" fill="#cbd5e1"/>
+  <rect x="22" y="39" width="4" height="2" fill="#cbd5e1"/>
+
+  <!-- Golden Clamp / Zipper Pull -->
+  <rect x="19" y="22" width="10" height="9" rx="2" fill="url(#zipperGrad)" filter="url(#arcShadow)"/>
+  <circle cx="24" cy="26.5" r="2" fill="#713f12"/>
+</svg>

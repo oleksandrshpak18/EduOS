@@ -1,0 +1,58 @@
+/* ==========================================================================
+   EduOS - Responsive & Adaptive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  #taskbar {
+    height: 44px;
+    padding: 0 8px;
+  }
+
+  .taskbar-item {
+    max-width: 44px;
+    padding: 0 8px;
+  }
+
+  .taskbar-item-title {
+    display: none;
+  }
+
+  #start-menu {
+    width: calc(100vw - 16px);
+    height: 75vh;
+    bottom: 50px;
+    left: 8px;
+  }
+
+  .start-apps-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  #task-engine-widget {
+    width: calc(100vw - 20px);
+    right: 10px;
+    top: 10px;
+  }
+
+  .explorer-sidebar {
+    width: 140px;
+  }
+
+  .explorer-search-wrapper {
+    width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .start-apps-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .explorer-sidebar {
+    display: none;
+  }
+
+  .tray-lang-badge {
+    display: none;
+  }
+}

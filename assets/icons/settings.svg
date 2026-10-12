@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="gearBig" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="gearSmall" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <filter id="gearShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Big Gear -->
+  <g transform="translate(19, 19)" filter="url(#gearShadow)">
+    <circle cx="0" cy="0" r="14" fill="url(#gearBig)"/>
+    <!-- Teeth -->
+    <path d="M-3-17h6v5h-6z M-3 12h6v5h-6z M-17-3h5v6h-5z M12-3h5v6h-5z M-12-12l4 4-4 4-4-4z M8 8l4 4-4 4-4-4z M-12 8l4-4 4 4-4 4z M8-12l4 4-4 4-4-4z" fill="url(#gearBig)"/>
+    <circle cx="0" cy="0" r="6" fill="#0f172a"/>
+  </g>
+
+  <!-- Small Accent Gear (Overlay) -->
+  <g transform="translate(32, 32)" filter="url(#gearShadow)">
+    <circle cx="0" cy="0" r="9" fill="url(#gearSmall)"/>
+    <path d="M-2-11h4v4h-4z M-2 7h4v4h-4z M-11-2h4v4h-4z M7-2h4v4h-4z M-8-8l3 3-3 3-3-3z M5 5l3 3-3 3-3-3z M-8 5l3-3 3 3-3 3z M5-8l3 3-3 3-3-3z" fill="url(#gearSmall)"/>
+    <circle cx="0" cy="0" r="3.5" fill="#f8fafc"/>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="tile1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="tile2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#4facfe"/>
+    </linearGradient>
+    <linearGradient id="tile3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="tile4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00c6ff"/>
+      <stop offset="100%" stop-color="#0072ff"/>
+    </linearGradient>
+    <filter id="tileGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0284c7" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded App Background for Title Bar Visibility -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.3"/>
+
+  <!-- Fluent OS 4-Tile Grid -->
+  <g filter="url(#tileGlow)">
+    <rect x="10" y="10" width="20" height="20" rx="4.5" fill="url(#tile1)"/>
+    <rect x="34" y="10" width="20" height="20" rx="4.5" fill="url(#tile2)"/>
+    <rect x="10" y="34" width="20" height="20" rx="4.5" fill="url(#tile3)"/>
+    <rect x="34" y="34" width="20" height="20" rx="4.5" fill="url(#tile4)"/>
+  </g>
+
+  <!-- Educational Emblem / Graduation Cap Overlay -->
+  <path d="M32 17l13 6.5-13 6.5-13-6.5z" fill="#ffffff" opacity="0.95"/>
+  <path d="M24 26.5v4.5c0 2.5 3.5 4.5 8 4.5s8-2 8-4.5v-4.5" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M43 25.5v7" fill="none" stroke="#fcd34d" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="43" cy="33.5" r="1.2" fill="#fcd34d"/>
+</svg>

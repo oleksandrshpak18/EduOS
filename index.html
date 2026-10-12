@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="EduOS — інтерактивна навчальна віртуальна операційна система для учнів 5-11 класів. Онлайн-тренажер файлової системи, термінала, додатків та сертифікації." />
+  <meta name="theme-color" content="#0b111e" />
+  <title>EduOS — Інтерактивна навчальна операційна система</title>
+
+  <!-- Favicon / Лого сайту у рядку заголовку браузера -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/icons/favicon.svg" />
+
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- CSS Design System -->
+  <link rel="stylesheet" href="css/main.css?v=2.3" />
+  <link rel="stylesheet" href="css/icons.css?v=2.3" />
+  <link rel="stylesheet" href="css/desktop.css?v=2.3" />
+  <link rel="stylesheet" href="css/taskbar.css?v=2.3" />
+  <link rel="stylesheet" href="css/start-menu.css?v=2.3" />
+  <link rel="stylesheet" href="css/windows.css?v=2.3" />
+  <link rel="stylesheet" href="css/context-menu.css?v=2.3" />
+  <link rel="stylesheet" href="css/applications.css?v=2.3" />
+  <link rel="stylesheet" href="css/dialogs.css?v=2.3" />
+  <link rel="stylesheet" href="css/responsive.css?v=2.3" />
+
+  <!-- Сторонні бібліотеки для офлайн-роботи -->
+  <script src="libs/jszip.min.js"></script>
+  <script src="libs/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. ЕКРАН ВХОДУ / ВИБОРУ ПРОФІЛЮ (LOGIN SCREEN)
+       ========================================================================= -->
+  <div id="login-screen">
+    <div class="login-glass-card acrylic-panel">
+      <div class="login-logo-group">
+        <img src="assets/icons/logo.svg" class="login-system-logo" width="64" height="64" alt="EduOS Logo" />
+        <h1 class="login-title">EduOS v2.0</h1>
+        <p class="login-subtitle">Інтерактивна навчальна операційна система</p>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="login-input-group">
+          <label for="login-lastname">Прізвище:</label>
+          <input type="text" id="login-lastname" class="login-input" placeholder="Петренко" required />
+        </div>
+
+        <div class="login-input-group">
+          <label for="login-firstname">Ім'я:</label>
+          <input type="text" id="login-firstname" class="login-input" placeholder="Андрій" required />
+        </div>
+
+        <div class="login-input-group">
+          <label for="login-grade">Клас:</label>
+          <input type="text" id="login-grade" class="login-input" placeholder="6-А" required />
+        </div>
+
+        <button type="submit" class="login-submit-btn" id="login-submit-btn">Увійти до системи</button>
+      </form>
+
+      <!-- Збережені локальні профілі учнів -->
+      <div id="login-saved-profiles" class="login-saved-profiles" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. ОСНОВНА ГРАФІЧНА ОБОЛОНКА (DESKTOP SHELL)
+       ========================================================================= -->
+  <div id="desktop-shell" style="display:none;">
+    
+    <!-- Робочий стіл зі шпалерами та іконками -->
+    <main id="desktop">
+      <div id="desktop-wallpaper"></div>
+      <div id="desktop-icons"></div>
+    </main>
+
+    <!-- Контейнер віконного менеджера -->
+    <div id="windows-container"></div>
+
+    <!-- Меню «Пуск» -->
+    <div id="start-menu" class="acrylic-panel">
+      <div class="start-search-box">
+        <span class="start-search-icon">🔍</span>
+        <input type="text" id="start-search-input" class="start-search-input" placeholder="Пошук програм, налаштувань та файлів..." />
+      </div>
+
+      <div class="start-section-header">
+        <span class="start-section-title">Закріплені програми</span>
+      </div>
+
+      <div class="start-apps-grid" id="start-apps-grid"></div>
+
+      <div class="start-profile-footer" id="start-profile-card"></div>
+    </div>
+
+    <!-- Панель завдань (Taskbar) -->
+    <footer id="taskbar">
+      <div class="taskbar-center-group">
+        <button id="start-button" class="taskbar-start-btn" title="Пуск" aria-label="Відкрити меню Пуск">
+          <svg class="start-icon-svg" width="22" height="22" viewBox="0 0 24 24">
+            <rect x="2" y="2" width="9" height="9" rx="1.5" fill="#38bdf8" />
+            <rect x="13" y="2" width="9" height="9" rx="1.5" fill="#0284c7" />
+            <rect x="2" y="13" width="9" height="9" rx="1.5" fill="#0078d4" />
+            <rect x="13" y="13" width="9" height="9" rx="1.5" fill="#0ea5e9" />
+          </svg>
+        </button>
+
+        <!-- Запущені вікна на панелі завдань -->
+        <div id="taskbar-apps" class="taskbar-apps-list"></div>
+      </div>
+
+      <!-- Системний трей -->
+      <div id="taskbar-tray" class="taskbar-tray">
+        <div class="tray-icon-item tray-lang-badge" title="Мова інтерфейсу">УКР</div>
+        <div class="tray-icon-item" title="Мережа: Підключено (Віртуальна LAN)">🌐</div>
+        <div class="tray-icon-item" title="Гучність: 80%">🔊</div>
+        <div id="taskbar-clock" class="taskbar-clock"></div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Точка входу в систему -->
+  <script type="module" src="js/core/app.js"></script>
+
+  <!-- PWA Service Worker реєстрація -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch((err) => {
+          console.log('[EduOS PWA] Service Worker registration skipped:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

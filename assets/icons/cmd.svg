@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="cmdHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="cmdShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Console Window Frame -->
+  <rect x="5" y="7" width="38" height="34" rx="4" fill="#090d16" stroke="#475569" stroke-width="1.2" filter="url(#cmdShadow)"/>
+
+  <!-- Console Header Bar -->
+  <path d="M5 11c0-2.2 1.8-4 4-4h30c2.2 0 4 1.8 4 4v5H5v-5z" fill="url(#cmdHeader)"/>
+
+  <!-- Window Header Dots -->
+  <circle cx="10" cy="11.5" r="2" fill="#ef4444"/>
+  <circle cx="16" cy="11.5" r="2" fill="#f59e0b"/>
+  <circle cx="22" cy="11.5" r="2" fill="#10b981"/>
+
+  <!-- Terminal Title Tag -->
+  <rect x="28" y="10" width="10" height="3" rx="1.5" fill="#64748b"/>
+
+  <!-- Prompt Command Symbol >_ -->
+  <path d="M12 21l6 5-6 5" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="22" y="29.5" width="8" height="2.5" rx="1" fill="#38bdf8"/>
+
+  <!-- Second Line text simulation -->
+  <rect x="12" y="35" width="14" height="2" rx="1" fill="#64748b"/>
+</svg>

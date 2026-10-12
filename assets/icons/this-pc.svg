@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="pcScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="pcBezel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="pcShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Monitor Frame -->
+  <rect x="5" y="6" width="38" height="26" rx="3" fill="url(#pcBezel)" filter="url(#pcShadow)"/>
+
+  <!-- Screen Content -->
+  <rect x="8" y="9" width="32" height="20" rx="1.5" fill="url(#pcScreen)"/>
+  <!-- Mini Windows inside screen -->
+  <rect x="11" y="12" width="12" height="8" rx="1" fill="#ffffff" opacity="0.85"/>
+  <rect x="25" y="15" width="12" height="10" rx="1" fill="#0369a1" opacity="0.9"/>
+
+  <!-- Monitor Stand Stem -->
+  <path d="M21 32h6v6h-6z" fill="#475569"/>
+
+  <!-- Monitor Base -->
+  <rect x="14" y="38" width="20" height="4" rx="2" fill="url(#pcBezel)" filter="url(#pcShadow)"/>
+</svg>

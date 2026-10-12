@@ -1,0 +1,65 @@
+{
+  "version": "2.0",
+  "packages": [
+    {
+      "id": "grade5-desktop-basics",
+      "title": "Робочий стіл, вікна та маніпулятор «миша»",
+      "topic": "Операційне середовище та графічний інтерфейс",
+      "grade": "5",
+      "difficulty": "easy",
+      "tasksCount": 4,
+      "maxScore": 12,
+      "file": "tasks/grade5-desktop-basics.json",
+      "icon": "desktop",
+      "description": "Практичне освоєння базових навичок: налаштування фону робочого столу, керування вікнами, створення ярликів та використання меню «Пуск»."
+    },
+    {
+      "id": "grade6-file-operations",
+      "title": "Файли, папки та операції над ними",
+      "topic": "Файлова система та зберігання даних",
+      "grade": "6",
+      "difficulty": "standard",
+      "tasksCount": 5,
+      "maxScore": 12,
+      "file": "tasks/grade6-file-operations.json",
+      "icon": "folder",
+      "description": "Створення структури каталогів, копіювання, переміщення, перейменування файлів, робота з Кошиком та відновлення об'єктів."
+    },
+    {
+      "id": "grade7-archives",
+      "title": "Архівація та стиснення даних",
+      "topic": "Стиснення інформації та резервне копіювання",
+      "grade": "7",
+      "difficulty": "standard",
+      "tasksCount": 4,
+      "maxScore": 12,
+      "file": "tasks/grade7-archives.json",
+      "icon": "archive",
+      "description": "Робота з архіватором: створення ZIP-архіву, додавання файлів до наявного архіву, перегляд вмісту та розпакування у вказану папку."
+    },
+    {
+      "id": "grade8-cli-basics",
+      "title": "Командний інтерфейс операційних систем (CLI)",
+      "topic": "Командний рядок Windows (CMD) та Linux (Bash)",
+      "grade": "8",
+      "difficulty": "advanced",
+      "tasksCount": 5,
+      "maxScore": 12,
+      "file": "tasks/grade8-cli-basics.json",
+      "icon": "terminal",
+      "description": "Опанування навігації та маніпуляцій файлами через команди: cd, dir/ls, mkdir, copy/cp, move/mv, del/rm, tree у терміналах CMD та Bash."
+    },
+    {
+      "id": "grade9-permissions-settings",
+      "title": "Керування дисками, системні налаштування та атрибути",
+      "topic": "Адміністрування та системні утиліти ОС",
+      "grade": "9",
+      "difficulty": "advanced",
+      "tasksCount": 4,
+      "maxScore": 12,
+      "file": "tasks/grade9-permissions-settings.json",
+      "icon": "settings",
+      "description": "Встановлення атрибутів файлів («Лише читання», «Прихований»), робота з диском D:, аналіз продуктивності в Диспетчері завдань."
+    }
+  ]
+}

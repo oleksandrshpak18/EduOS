@@ -1,0 +1,186 @@
+/* ==========================================================================
+   EduOS - Start Menu (Windows 11 Fluent Bottom-Left Panel)
+   ========================================================================== */
+
+#start-menu {
+  position: absolute;
+  bottom: 56px;
+  left: 12px;
+  transform: translateY(16px) scale(0.96);
+  transform-origin: bottom left;
+  width: 580px;
+  max-width: calc(100vw - 24px);
+  height: 520px;
+  max-height: calc(100vh - 70px);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+}
+
+#start-menu.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Пошук у меню Пуск */
+.start-search-box {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.start-search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 16px 0 38px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  color: var(--text-primary);
+  font-size: 13px;
+  transition: all var(--transition-fast);
+}
+
+.start-search-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 12px var(--accent-glow);
+  background: var(--bg-surface-active);
+}
+
+.start-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  font-size: 14px;
+}
+
+/* Секція закріплених програм */
+.start-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.start-section-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.start-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px 6px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.start-app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.start-app-item:hover {
+  background: var(--bg-surface-hover);
+  transform: translateY(-2px);
+}
+
+.start-app-icon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* Іконки програм підтягуються глобально через css/icons.css */
+
+
+.start-app-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 76px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Нижня картка профілю */
+.start-profile-footer {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), #38bdf8);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.profile-info {
+  flex: 1;
+  margin-left: 12px;
+}
+
+.profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profile-class {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.profile-power-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.profile-power-btn:hover {
+  background: var(--bg-surface-active);
+  color: var(--color-danger);
+}

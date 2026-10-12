@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="bashBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#300a24"/>
+      <stop offset="100%" stop-color="#190412"/>
+    </linearGradient>
+    <linearGradient id="bashHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4d173e"/>
+      <stop offset="100%" stop-color="#300a24"/>
+    </linearGradient>
+    <filter id="bashShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Linux Terminal Window -->
+  <rect x="5" y="7" width="38" height="34" rx="4" fill="url(#bashBg)" stroke="#77216f" stroke-width="1.2" filter="url(#bashShadow)"/>
+
+  <!-- Window Header -->
+  <path d="M5 11c0-2.2 1.8-4 4-4h30c2.2 0 4 1.8 4 4v5H5v-5z" fill="url(#bashHeader)"/>
+  <circle cx="10" cy="11.5" r="2" fill="#e95420"/>
+  <circle cx="16" cy="11.5" r="2" fill="#77216f"/>
+  <circle cx="22" cy="11.5" r="2" fill="#5e2750"/>
+
+  <!-- Linux Terminal Prompt: $ _ in glowing green -->
+  <!-- Dollar sign -->
+  <text x="11" y="29" font-family="monospace" font-size="14" font-weight="bold" fill="#4ade80">$</text>
+  <!-- Shell Cursor -->
+  <rect x="22" y="19" width="7" height="11" rx="1" fill="#4ade80"/>
+
+  <text x="11" y="38" font-family="monospace" font-size="9" fill="#a78bfa">eduos:~$</text>
+</svg>

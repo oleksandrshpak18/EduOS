@@ -1,0 +1,16 @@
+{
+  "name": "EduOS — Інтерактивна навчальна операційна система",
+  "short_name": "EduOS",
+  "description": "Автономний освітній вебтренажер файлової системи, термінала та додатків операційної системи.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b111e",
+  "theme_color": "#0b111e",
+  "icons": [
+    {
+      "src": "assets/wallpapers/default_fluent.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    }
+  ]
+}

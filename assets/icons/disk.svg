@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="diskCase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="platterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="50%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <filter id="diskShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Drive Enclosure -->
+  <rect x="7" y="6" width="34" height="36" rx="4" fill="url(#diskCase)" filter="url(#diskShadow)"/>
+
+  <!-- Platter Circle -->
+  <circle cx="24" cy="22" r="13" fill="url(#platterGrad)"/>
+  <circle cx="24" cy="22" r="5" fill="#334155"/>
+  <circle cx="24" cy="22" r="2" fill="#f8fafc"/>
+
+  <!-- Read/Write Head Arm -->
+  <path d="M12 34l10-10 2 2-10 10z" fill="#0284c7"/>
+  <circle cx="12" cy="34" r="3" fill="#38bdf8"/>
+  <circle cx="23" cy="23" r="1.5" fill="#ef4444"/>
+
+  <!-- Activity LED -->
+  <circle cx="34" cy="36" r="2" fill="#22c55e"/>
+</svg>
